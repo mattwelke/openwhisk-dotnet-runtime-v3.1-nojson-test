@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO;
+using System.Text;
 
 namespace OpenWhiskDotnetNoJsonTest
 {
@@ -12,7 +14,19 @@ namespace OpenWhiskDotnetNoJsonTest
             headers.Add("Content-Type", "image/png");
             output.Add("headers", headers);
 
-            var body = ImageBase64();
+            // This doesn't work with the current approach to runtimes. We get
+            // the code to compile using a MemoryStream (unlike the JSON approach)
+            // and at runtime, the MemoryStream gets returned from the action method
+            // to the runtime. But the runtime can't handle the MemoryStream because it
+            // naively converts the dict to a JObject for the OpenWhisk system. It might
+            // be possible to improve the runtime logic using dicts for receiving data
+            // from the action to use reflection to detect when the body is a stream,
+            // and if so, to stream that data to a string to put in the JObject
+            // returned to OpenWhisk, but it's unclear if a stream can be used as is
+            // by the action runtime to stream the data all the way back to OpenWhisk
+            // (therefore efficiently streaming the data directly from the action
+            // method to OpenWhisk).
+            var body = new MemoryStream(Encoding.ASCII.GetBytes(ImageBase64()));
             output.Add("body", body);
 
             return output;

@@ -2,7 +2,7 @@
 
 RESOURCE_GROUP="Default"
 FN_NAMESPACE="dallas-namespace"
-ACTION_NAME="dotnet-runtime-3.1-nojson-image-test"
+ACTION_NAME="dotnet-runtime-3.1-nojson-image-stream-test"
 
 echo "Beginning build..."
 
